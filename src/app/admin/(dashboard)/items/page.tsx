@@ -2,6 +2,8 @@ import { ItemList } from "@/components/admin/item-list";
 import { getCategoriesAdmin } from "@/lib/categoryServiceAdmin";
 import { fetchItemsAdmin } from "@/lib/menuServiceAdmin";
 
+export const dynamic = 'force-dynamic';
+
 export default async function ItemsPage() {
   const items = await fetchItemsAdmin();
   const categories = await getCategoriesAdmin();

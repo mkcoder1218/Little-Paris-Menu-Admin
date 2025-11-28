@@ -9,53 +9,28 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 
-const categoryCollection = collection(db, "categories");
+import { Category } from "./types";
 
-// Cache for categories
-let categoriesCache: any[] | null = null;
-let cacheTimestamp = 0;
-const CACHE_DURATION = 30000; // 30 seconds
+const categoryCollection = collection(db, "categories");
 
 export const addCategory = async (name: string) => {
   const docRef = await addDoc(categoryCollection, { name });
-  // Invalidate cache
-  categoriesCache = null;
   return docRef.id;
 };
 
-export const getCategories = async () => {
-  const now = Date.now();
-  
-  // Return cached data if still valid
-  if (categoriesCache && (now - cacheTimestamp) < CACHE_DURATION) {
-    console.log("Returning cached categories");
-    return categoriesCache;
-  }
-  
+export const getCategories = async (): Promise<Category[]> => {
   console.log("Fetching categories from Firestore");
   const snapshot = await getDocs(categoryCollection);
-  categoriesCache = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-  cacheTimestamp = now;
-  
-  return categoriesCache;
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Category));
 };
 
 export const updateCategory = async (id: string, name: string) => {
   const docRef = doc(db, "categories", id);
   await updateDoc(docRef, { name });
-  // Invalidate cache
-  categoriesCache = null;
 };
 
 export const deleteCategory = async (id: string) => {
   const docRef = doc(db, "categories", id);
   await deleteDoc(docRef);
-  // Invalidate cache
-  categoriesCache = null;
 };
 
-// Manual cache invalidation function
-export const invalidateCategoriesCache = () => {
-  categoriesCache = null;
-  cacheTimestamp = 0;
-};

@@ -397,7 +397,7 @@ export function ItemList({ categories }: ItemListProps) {
                   const input = document.createElement('input');
                   input.type = 'file';
                   input.accept = 'image/*';
-                  input.capture = 'environment';
+                  input.setAttribute('capture', 'environment');
                   input.onchange = (e: any) => {
                     const file = e.target.files?.[0];
                     if (file) {

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Image as ImageIcon, UploadCloud } from "lucide-react";
+import { Loader2, Image as ImageIcon, UploadCloud, Camera } from "lucide-react";
 
 export default function DishUploadForm() {
   const [loading, setLoading] = useState(false);
@@ -160,6 +160,31 @@ export default function DishUploadForm() {
                 className="hidden" 
                 onChange={handleFileChange}
               />
+            </div>
+            
+            {/* Mobile Camera Button */}
+            <div className="md:hidden mt-2">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full border-amber-900/30 text-amber-200 hover:bg-amber-900/20 hover:text-amber-100"
+                onClick={() => {
+                  const input = document.createElement('input');
+                  input.type = 'file';
+                  input.accept = 'image/*';
+                  input.capture = 'environment';
+                  input.onchange = (e: any) => {
+                     const file = e.target.files?.[0];
+                     if (file) {
+                        handleFileChange({ target: { files: [file] } } as any);
+                     }
+                  };
+                  input.click();
+                }}
+              >
+                <Camera className="mr-2 h-4 w-4" />
+                Take Photo
+              </Button>
             </div>
           </div>
 

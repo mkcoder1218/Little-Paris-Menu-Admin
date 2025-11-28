@@ -393,7 +393,20 @@ export function ItemList({ categories }: ItemListProps) {
             <div className="flex flex-col sm:flex-row gap-2">
               <Button
                 type="button"
-                onClick={() => cameraInputRef.current?.click()}
+                onClick={() => {
+                  const input = document.createElement('input');
+                  input.type = 'file';
+                  input.accept = 'image/*';
+                  input.capture = 'environment';
+                  input.onchange = (e: any) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      // Reuse existing handler
+                      handleImageChange({ target: { files: [file] } } as any);
+                    }
+                  };
+                  input.click();
+                }}
                 className="flex-1 h-10 sm:h-11"
               >
                 <Camera className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> 
